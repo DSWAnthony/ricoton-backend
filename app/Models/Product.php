@@ -22,4 +22,9 @@ class Product extends Model
     {
         return Carbon::instance($date)->setTimezone('America/Lima')->toDateTimeString();
     }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 }

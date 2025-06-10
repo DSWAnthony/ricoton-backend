@@ -3,44 +3,59 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\Category\StoreCategoryRequest;
+use App\Http\Requests\Category\UpdateCategoryRequest;
+use App\Services\CategoryService;
 use App\Models\Category;
+use Storage;
 
 class CategoryController extends Controller
 {
+    public function __construct(
+        private CategoryService $service
+    ) {}
     public function index()
     {
-        return response()->json(Category::all(), 200);
+        $categories = $this->service->getActiveCategories();
+
+        return response()->json($categories, 200);
     }
 
-    public function store(Request $request)
+    public function store(StoreCategoryRequest $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|max:100',
-            'description' => 'nullable|string',
-            'is_active' => 'boolean'
-        ]);
+        $data = $request->validated();
+        
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('categories', 'public');
+             $data = array_merge($request->all(), [
+                'image_url' => Storage::disk('public')->url($imagePath)
+            ]);
+        }
 
-        $category = Category::create($validated);
+        $category = $this->service->createCategory($data);
+        
+        if (!$category)
+            return response()->json(['message' => 'Error al crear la categoría'], 500);
+        
         return response()->json(['message' => 'Categoría creada', 'data' => $category], 201);
     }
 
     public function show($id)
     {
-        $category = Category::find($id);
+        $category = $this->service->findCategoryById($id);
         if (!$category)
             return response()->json(['message' => 'Categoría no encontrada'], 404);
 
         return response()->json($category, 200);
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateCategoryRequest $request, $id)
     {
-        $category = Category::find($id);
-        if (!$category)
-            return response()->json(['message' => 'Categoría no encontrada'], 404);
+        $category = $this->service->updateCategory($id, $request->validated());
 
-        $category->update($request->all());
+        if (!$category)
+            return response()->json(['message' => 'Error al actualizar la categoría'], 500);
+
         return response()->json(['message' => 'Categoría actualizada', 'data' => $category], 200);
     }
 

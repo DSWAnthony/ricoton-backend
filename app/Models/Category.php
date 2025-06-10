@@ -12,11 +12,17 @@ class Category extends Model
     protected $fillable = [
         'name',
         'description',
+        'image_url',
         'is_active',
     ];
 
     protected function serializeDate(\DateTimeInterface $date)
     {
         return Carbon::instance($date)->setTimezone('America/Lima')->toDateTimeString();
+    }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
     }
 }

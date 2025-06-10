@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Product\StoreProductRequest;
 use Illuminate\Http\Request;
 use App\Models\Product;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -13,18 +15,20 @@ class ProductController extends Controller
         return response()->json(Product::all(), 200);
     }
 
-    public function store(Request $request)
+    public function store(StoreProductRequest $request)
     {
-        $validated = $request->validate([
-            'category_id' => 'required|exists:categories,id',
-            'name' => 'required|max:150',
-            'description' => 'nullable|string',
-            'image_url' => 'nullable|string|max:50',
-            'price' => 'required|numeric|min:0',
-            'is_active' => 'boolean'
-        ]);
+        
+        $data = $request->validated();
 
-        $product = Product::create($validated);
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('products', 'public');
+
+            $data = array_merge($request->all(), [
+                'image_url' => Storage::disk('public')->url($imagePath)
+            ]);
+        }
+
+        $product = Product::create($data);
         return response()->json(['message' => 'Producto creado', 'data' => $product], 201);
     }
 
