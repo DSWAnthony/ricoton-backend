@@ -14,4 +14,5 @@ class Setting extends Model
         'company_description',
         'logo_url'
     ];
+    
 }

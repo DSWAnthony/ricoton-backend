@@ -14,6 +14,7 @@ use App\Http\Controllers\ProductController;
 Route::apiResource('categories', CategoryController::class);
 Route::apiResource('products', ProductController::class);
 
+Route::post('/produc/{id}', [ProductController::class, 'update']);
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -25,7 +26,7 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::get('/setting', [SettingController::class, 'showSetting']);;
 Route::post('/setting', [SettingController::class, 'store']);
-Route::put('/setting', [SettingController::class, 'update']);
+Route::post('/settings', [SettingController::class, 'update']);
 
 Route::get('/policy', [PolicyController::class, 'showPolicy']);
 Route::post('/policy', [PolicyController::class, 'createPolicy']);

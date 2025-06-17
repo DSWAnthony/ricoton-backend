@@ -4,6 +4,14 @@ namespace App\Http\Requests\Terms;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @OA\Schema(
+ *     schema="UpdateTermsRequest",
+ *     @OA\Property(property="title", type="string", maxLength=255, example="Términos Actualizados"),
+ *     @OA\Property(property="description", type="string", example="Contenido actualizado..."),
+ *     @OA\Property(property="other_description", type="string", nullable=true, example="Información adicional actualizada")
+ * )
+ */
 class UpdateTermsRequest extends FormRequest
 {
     /**

@@ -1,0 +1,1188 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Ricoton API",
+        "description": "Documentación de la API de autenticación con Swagger en Laravel 12",
+        "contact": {
+            "email": "soporte@tuempresa.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000/",
+            "description": "API Server"
+        }
+    ],
+    "paths": {
+        "/api/register": {
+            "post": {
+                "tags": [
+                    "Autenticación"
+                ],
+                "summary": "Registro de usuario",
+                "description": "Register",
+                "operationId": "8a56853624e025573120a09a4c75d468",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegisterRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Usuario creado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Usuario registrado correctamente"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error interno",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Error al crear Usuario"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Autenticación"
+                ],
+                "summary": "Login de usuario",
+                "description": "Login",
+                "operationId": "a3b306d14572d1f4bd6c064b3233e7b8",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Credenciales correctas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Usuario Autenticado correctamente"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error interno",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Error al autenticar usuario"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/categories": {
+            "get": {
+                "tags": [
+                    "Categorías"
+                ],
+                "summary": "Obtener categorías activas",
+                "description": "Endpoint público para listar categorías activas",
+                "operationId": "3f5817a34833d0a1f4af4548dd3aeaba",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Category"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Categorías"
+                ],
+                "summary": "Crear nueva categoría",
+                "description": "Endpoint protegido que requiere token de autenticación",
+                "operationId": "71fcad552bb0eaba9fb191fd8d8dcab0",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreCategoryRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Categoría creada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Categoría creada"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Category"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error interno",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Error al crear la categoría"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/categories/{id}": {
+            "get": {
+                "tags": [
+                    "Categorías"
+                ],
+                "summary": "Obtener categoría por ID",
+                "description": "Endpoint público para obtener detalles de una categoría",
+                "operationId": "c68e76d323c008827a9e47398b1583de",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la categoría",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Category"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Categoría no encontrada"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Categorías"
+                ],
+                "summary": "Actualizar categoría existente",
+                "description": "Endpoint protegido que requiere token de autenticación",
+                "operationId": "0e686b2748211cc688333ed705dc111f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la categoría a actualizar",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateCategoryRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Categoría actualizada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Categoría actualizada"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Category"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Categoría no encontrada"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error interno",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Error al actualizar la categoría"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Categorías"
+                ],
+                "summary": "Eliminar categoría",
+                "description": "Endpoint protegido que requiere token de autenticación",
+                "operationId": "4c12e22a7f8c617bd83bfa1fdc05428d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la categoría a eliminar",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Categoría eliminada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Categoría eliminada"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Categoría no encontrada"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/policy": {
+            "get": {
+                "tags": [
+                    "Políticas"
+                ],
+                "summary": "Obtener la política actual",
+                "description": "Endpoint público para obtener las políticas de privacidad y uso",
+                "operationId": "6ada9b980c60c8d492e79ee4f0890fb9",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Policy"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Políticas"
+                ],
+                "summary": "Actualizar política existente",
+                "description": "Endpoint protegido que requiere token de autenticación",
+                "operationId": "82e2f1c081cc19cd2caa9032510366ac",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdatePolicyRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Política actualizada exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Policy updated successfully"
+                                        },
+                                        "policy": {
+                                            "$ref": "#/components/schemas/Policy"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Política no encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Policy not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Políticas"
+                ],
+                "summary": "Crear nueva política",
+                "description": "Endpoint protegido que requiere token de autenticación",
+                "operationId": "0f35d62375aabc890a7453e36857a4c4",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StorePolicyRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Política creada exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Policy created successfully"
+                                        },
+                                        "policy": {
+                                            "$ref": "#/components/schemas/Policy"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/setting": {
+            "get": {
+                "tags": [
+                    "Configuración"
+                ],
+                "summary": "Obtener configuración actual",
+                "description": "Endpoint público para obtener la configuración de la empresa",
+                "operationId": "3988a181344634d80af8d3dbf1d95179",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Setting"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Configuración"
+                ],
+                "summary": "Actualizar configuración existente",
+                "description": "Endpoint protegido que requiere token de autenticación",
+                "operationId": "b0691f1b7d0edf0e22edb8212f0f2165",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateSettingRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Configuración actualizada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Settings updated successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    },
+                    "404": {
+                        "description": "Configuración no encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Configuración"
+                ],
+                "summary": "Crear nueva configuración",
+                "description": "Endpoint protegido que requiere token de autenticación",
+                "operationId": "73e029d0273bbeb45ef7aac868663356",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreSettingRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Configuración creada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Settings created successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Setting"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autenticado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/terms": {
+            "get": {
+                "tags": [
+                    "Términos y Condiciones"
+                ],
+                "summary": "Obtener los términos y condiciones actuales",
+                "description": "Endpoint público para obtener los términos y condiciones",
+                "operationId": "4098b16d08e98d00aeb93236b3ef0c7e",
+                "responses": {
+                    "200": {
+                        "description": "Términos obtenidos exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Term"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Términos no encontrados",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Term not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Términos y Condiciones"
+                ],
+                "summary": "Actualizar términos y condiciones existentes",
+                "description": "Endpoint protegido que requiere token de autenticación",
+                "operationId": "113b84e5477a1bc6b6be9bc701829838",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateTermsRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Términos actualizados exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Term"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error al actualizar términos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Failed to update term"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Términos y Condiciones"
+                ],
+                "summary": "Crear nuevos términos y condiciones",
+                "description": "Endpoint protegido que requiere token de autenticación",
+                "operationId": "378e824121f2d880160c4b9a9d2febac",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreTermsRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Términos creados exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Term"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error al crear términos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Failed to create term"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "No autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Category": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Electrónicos"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Productos electrónicos",
+                        "nullable": true
+                    },
+                    "image_url": {
+                        "type": "string",
+                        "format": "url",
+                        "example": "http://ejemplo.com/storage/categories/tech.jpg",
+                        "nullable": true
+                    },
+                    "is_active": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Policy": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "title": {
+                        "type": "string",
+                        "example": "Política de Privacidad"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Contenido detallado de las políticas..."
+                    },
+                    "other_description": {
+                        "type": "string",
+                        "example": "Sección adicional sobre políticas",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Setting": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "company_name": {
+                        "type": "string",
+                        "example": "Mi Empresa"
+                    },
+                    "company_description": {
+                        "type": "string",
+                        "example": "Descripción de ejemplo"
+                    },
+                    "logo_url": {
+                        "type": "string",
+                        "format": "url",
+                        "example": "http://ejemplo.com/storage/settings/logo.jpg"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Term": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "title": {
+                        "type": "string",
+                        "example": "Términos de Servicio"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Contenido detallado..."
+                    },
+                    "other_description": {
+                        "type": "string",
+                        "example": "Sección adicional",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "LoginRequest": {
+                "required": [
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "jhon@gmail.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "password123"
+                    }
+                },
+                "type": "object"
+            },
+            "RegisterRequest": {
+                "required": [
+                    "name",
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "jhon@gmail.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "password123"
+                    }
+                },
+                "type": "object"
+            },
+            "StoreCategoryRequest": {
+                "required": [
+                    "name"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "maxLength": 100,
+                        "example": "Electrónicos"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Productos electrónicos",
+                        "nullable": true
+                    },
+                    "image": {
+                        "description": "Imagen de categoría (formatos: jpeg,png,jpg,gif,svg, tamaño máximo: 2MB)",
+                        "type": "string",
+                        "format": "binary"
+                    },
+                    "is_active": {
+                        "type": "boolean",
+                        "example": true
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateCategoryRequest": {
+                "required": [
+                    "name"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "maxLength": 100,
+                        "example": "Electrónicos Actualizados"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Productos electrónicos de última generación",
+                        "nullable": true
+                    },
+                    "is_active": {
+                        "type": "boolean",
+                        "example": false
+                    }
+                },
+                "type": "object"
+            },
+            "StorePolicyRequest": {
+                "required": [
+                    "title",
+                    "description"
+                ],
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "example": "Política de Privacidad"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Detalles de nuestra política de privacidad..."
+                    },
+                    "other_description": {
+                        "type": "string",
+                        "example": "Información adicional sobre políticas",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "UpdatePolicyRequest": {
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "example": "Política de Privacidad Actualizada"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Detalles actualizados de nuestra política..."
+                    },
+                    "other_description": {
+                        "type": "string",
+                        "example": "Información adicional actualizada",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "StoreSettingRequest": {
+                "required": [
+                    "company_name",
+                    "company_description"
+                ],
+                "properties": {
+                    "company_name": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "example": "Mi Empresa S.A."
+                    },
+                    "company_description": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "example": "Descripción de la empresa"
+                    },
+                    "image": {
+                        "description": "Imagen de logo (formatos: jpeg,png,jpg,gif,svg, tamaño máximo: 2MB)",
+                        "type": "string",
+                        "format": "binary"
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateSettingRequest": {
+                "properties": {
+                    "company_name": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "example": "Nuevo Nombre S.A."
+                    },
+                    "company_description": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "example": "Nueva descripción"
+                    },
+                    "image": {
+                        "description": "Nueva imagen de logo (formatos: jpeg,png,jpg,gif,svg, tamaño máximo: 2MB)",
+                        "type": "string",
+                        "format": "binary"
+                    }
+                },
+                "type": "object"
+            },
+            "StoreTermsRequest": {
+                "required": [
+                    "title",
+                    "description"
+                ],
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "example": "Términos de Servicio"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Contenido detallado de los términos..."
+                    },
+                    "other_description": {
+                        "type": "string",
+                        "example": "Información adicional",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateTermsRequest": {
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "example": "Términos Actualizados"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Contenido actualizado..."
+                    },
+                    "other_description": {
+                        "type": "string",
+                        "example": "Información adicional actualizada",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Autenticación",
+            "description": "autenticación de usuarios"
+        },
+        {
+            "name": "Categorías",
+            "description": "Gestión de categorías de productos"
+        },
+        {
+            "name": "Políticas",
+            "description": "Gestión de políticas de privacidad y uso"
+        },
+        {
+            "name": "Configuración",
+            "description": "Gestión de la configuración de la empresa"
+        },
+        {
+            "name": "Términos y Condiciones",
+            "description": "Gestión de los términos y condiciones del servicio"
+        }
+    ]
+}

@@ -4,6 +4,15 @@ namespace App\Http\Requests\Category;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @OA\Schema(
+ *     schema="UpdateCategoryRequest",
+ *     required={"name"},
+ *     @OA\Property(property="name", type="string", maxLength=100, example="Electrónicos Actualizados"),
+ *     @OA\Property(property="description", type="string", nullable=true, example="Productos electrónicos de última generación"),
+ *     @OA\Property(property="is_active", type="boolean", example=false)
+ * )
+ */
 class UpdateCategoryRequest extends FormRequest
 {
     /**
