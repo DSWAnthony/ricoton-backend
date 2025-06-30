@@ -27,4 +27,17 @@ class SettingService
         return Setting::first();
     }
 
+    public function deleteLogo()
+    {
+        $setting = Setting::firstOrFail();
+        if ($setting->logo_url) {
+            // Delete the logo file from storage
+            // Storage::disk('public')->delete($setting->logo_url);
+            // Update the logo_url field to null
+            $setting->logo_url = null;
+            $setting->save();
+        }
+        return response()->json(['message' => 'Logo deleted successfully']);
+    }
+
 }

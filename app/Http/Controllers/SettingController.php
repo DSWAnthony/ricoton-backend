@@ -155,5 +155,38 @@ class SettingController extends Controller
 
         return response()->json(['message' => 'Settings updated successfully'], 200);
     }
+
+    /**
+     * Eliminar configuración
+     *
+     * @OA\Delete(
+     *     path="/api/setting",
+     *     tags={"Configuración"},
+     *     summary="Eliminar configuración",
+     *     description="Endpoint protegido que requiere token de autenticación",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Configuración eliminada",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Settings deleted successfully")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="No autenticado"
+     *     ),
+     * )
+     */
+    public function delete()
+    {
+        $setting = $this->settingService->getSetting();
+        if ($setting && isset($setting->logo_url)) {
+            // Delete the logo file from storage
+            $this->deleteImageForUrl($setting->logo_url);   
+        }
+        $this->settingService->deleteLogo();
+        return response()->json(['message' => 'Logo deleted successfully'], 200);
+    }
     
 }

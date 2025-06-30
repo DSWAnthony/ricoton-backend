@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Category\StoreCategoryRequest;
 use App\Http\Requests\Category\UpdateCategoryRequest;
+use App\Http\Utils\DeleteImage;
 use App\Services\CategoryService;
 use App\Models\Category;
 use Storage;
@@ -28,6 +29,7 @@ use Storage;
  */
 class CategoryController extends Controller
 {
+    use DeleteImage;
     public function __construct(
         private CategoryService $service
     ) {}
@@ -201,7 +203,26 @@ class CategoryController extends Controller
      */
     public function update(UpdateCategoryRequest $request, $id)
     {
-        $category = $this->service->updateCategory($id, $request->validated());
+        $category = $this->service->findCategoryById($id);
+
+
+        if ($request->hasFile('image')) {
+
+            if ($category && isset($category->image_url)) {
+                $this->deleteImageForUrl($category->image_url);
+            }
+
+            $imagePath = $request->file('image')->store('categories', 'public');
+            
+            $data = array_merge($request->all(), [
+                'image_url' => Storage::disk('public')->url($imagePath)
+            ]);
+
+            $category->update($data);
+
+        } else {
+            $category->update($request->all());
+        }
 
         if (!$category)
             return response()->json(['message' => 'Error al actualizar la categoría'], 500);
@@ -253,5 +274,30 @@ class CategoryController extends Controller
 
         $category->delete();
         return response()->json(['message' => 'Categoría eliminada'], 200);
+    }
+
+    public function getProductsForCategory(string $name)
+    {
+        $category = Category::where('name', $name)
+                ->with('products')
+                ->first();
+        if (!$category) {
+            return response()->json(['message' => 'Categoría no encontrada'], 404);
+        }
+
+  
+
+        return response()->json($category, 200);
+    }
+
+    public function getProductsForCategoryById(int $id)
+    {
+        $category = Category::find($id);
+        if (!$category) {
+            return response()->json(['message' => 'Categoría no encontrada'], 404);
+        }
+
+        $products = $category->products;
+        return response()->json($products, 200);
     }
 }
