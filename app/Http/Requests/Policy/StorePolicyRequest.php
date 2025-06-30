@@ -4,6 +4,15 @@ namespace App\Http\Requests\Policy;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @OA\Schema(
+ *     schema="StorePolicyRequest",
+ *     required={"title", "description"},
+ *     @OA\Property(property="title", type="string", maxLength=255, example="Política de Privacidad"),
+ *     @OA\Property(property="description", type="string", example="Detalles de nuestra política de privacidad..."),
+ *     @OA\Property(property="other_description", type="string", nullable=true, example="Información adicional sobre políticas")
+ * )
+ */
 class StorePolicyRequest extends FormRequest
 {
     /**

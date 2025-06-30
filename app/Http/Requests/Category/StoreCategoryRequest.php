@@ -4,6 +4,21 @@ namespace App\Http\Requests\Category;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @OA\Schema(
+ *     schema="StoreCategoryRequest",
+ *     required={"name"},
+ *     @OA\Property(property="name", type="string", maxLength=100, example="Electrónicos"),
+ *     @OA\Property(property="description", type="string", nullable=true, example="Productos electrónicos"),
+ *     @OA\Property(
+ *         property="image",
+ *         type="string",
+ *         format="binary",
+ *         description="Imagen de categoría (formatos: jpeg,png,jpg,gif,svg, tamaño máximo: 2MB)"
+ *     ),
+ *     @OA\Property(property="is_active", type="boolean", example=true)
+ * )
+ */
 class StoreCategoryRequest extends FormRequest
 {
     /**

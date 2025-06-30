@@ -2,39 +2,38 @@
 
 namespace App\Http\Utils;
 
-use Storage;
-use Str;
-
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 trait DeleteImage
 {
-    /**
-     * Delete an image from the storage.
-     *
-     * @param string $imagePath
-     * @return void
-     */
+
     public function deleteImageForUrl(?string $url): bool
     {
         if (empty($url)) {
             return false;
         }
-    
-        $pathWithStorage = parse_url($url, PHP_URL_PATH);
 
-        // Quita el prefijo 
-        $relativePath = Str::replaceFirst('/storage/', '', $pathWithStorage);
+        try {
+            $pathWithStorage = parse_url($url, PHP_URL_PATH);
+            $relativePath = Str::replaceFirst('/storage/', '', $pathWithStorage);
 
-        // Log::info('Intentando borrar fichero en disco:', [
-        //     'relativePath' => $relativePath,
-        //     'exists'       => Storage::disk('public')->exists($relativePath),
-        // ]);
+            if (Storage::disk('public')->exists($relativePath)) {
+                return Storage::disk('public')->delete($relativePath);
+            }
 
-        // borramos
-        if (Storage::disk('public')->exists($relativePath)) {
-            return Storage::disk('public')->delete($relativePath);
+            // Intentar con diferentes patrones de URL
+            $alternativePath = Str::after($url, Storage::disk('public')->url(''));
+            if (Storage::disk('public')->exists($alternativePath)) {
+                return Storage::disk('public')->delete($alternativePath);
+            }
+
+            Log::warning("Imagen no encontrada: $url");
+            return false;
+        } catch (\Exception $e) {
+            Log::error("Error eliminando imagen: {$url} - " . $e->getMessage());
+            return false;
         }
-
-        return false;
     }
 }

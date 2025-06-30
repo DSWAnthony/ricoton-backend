@@ -8,6 +8,22 @@ use App\Http\Utils\DeleteImage;
 use App\Services\SettingService;
 use Illuminate\Support\Facades\Storage;
 
+/**
+ * @OA\Tag(
+ *     name="Configuración",
+ *     description="Gestión de la configuración de la empresa"
+ * )
+ * @OA\Schema(
+ *     schema="Setting",
+ *     type="object",
+ *     @OA\Property(property="id", type="integer", example=1),
+ *     @OA\Property(property="company_name", type="string", example="Mi Empresa"),
+ *     @OA\Property(property="company_description", type="string", example="Descripción de ejemplo"),
+ *     @OA\Property(property="logo_url", type="string", format="url", example="http://ejemplo.com/storage/settings/logo.jpg"),
+ *     @OA\Property(property="created_at", type="string", format="date-time"),
+ *     @OA\Property(property="updated_at", type="string", format="date-time")
+ * )
+ */
 class SettingController extends Controller
 {
     use DeleteImage;
@@ -17,7 +33,19 @@ class SettingController extends Controller
     ) {}
 
     /**
-     * Display a listing of the resource.
+     * Obtener configuración actual
+     *
+     * @OA\Get(
+     *     path="/api/setting",
+     *     tags={"Configuración"},
+     *     summary="Obtener configuración actual",
+     *     description="Endpoint público para obtener la configuración de la empresa",
+     *     @OA\Response(
+     *         response=200,
+     *         description="OK",
+     *         @OA\JsonContent(ref="#/components/schemas/Setting")
+     *     )
+     * )
      */
     public function showSetting()
     {
@@ -27,7 +55,34 @@ class SettingController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Crear nueva configuración
+     *
+     * @OA\Post(
+     *     path="/api/setting",
+     *     tags={"Configuración"},
+     *     summary="Crear nueva configuración",
+     *     description="Endpoint protegido que requiere token de autenticación",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(ref="#/components/schemas/StoreSettingRequest")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Configuración creada",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Settings created successfully"),
+     *             @OA\Property(property="data", ref="#/components/schemas/Setting")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="No autenticado"
+     *     )
+     * )
      */
     public function store(StoreSettingRequest $request)
     {
@@ -45,7 +100,37 @@ class SettingController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Actualizar configuración existente
+     *
+     * @OA\Put(
+     *     path="/api/setting",
+     *     tags={"Configuración"},
+     *     summary="Actualizar configuración existente",
+     *     description="Endpoint protegido que requiere token de autenticación",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(ref="#/components/schemas/UpdateSettingRequest")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Configuración actualizada",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Settings updated successfully")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="No autenticado"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Configuración no encontrada"
+     *     )
+     * )
      */
     public function update(UpdateSettingRequest $request)
     {
@@ -70,4 +155,38 @@ class SettingController extends Controller
 
         return response()->json(['message' => 'Settings updated successfully'], 200);
     }
+
+    /**
+     * Eliminar configuración
+     *
+     * @OA\Delete(
+     *     path="/api/setting",
+     *     tags={"Configuración"},
+     *     summary="Eliminar configuración",
+     *     description="Endpoint protegido que requiere token de autenticación",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Configuración eliminada",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Settings deleted successfully")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="No autenticado"
+     *     ),
+     * )
+     */
+    public function delete()
+    {
+        $setting = $this->settingService->getSetting();
+        if ($setting && isset($setting->logo_url)) {
+            // Delete the logo file from storage
+            $this->deleteImageForUrl($setting->logo_url);   
+        }
+        $this->settingService->deleteLogo();
+        return response()->json(['message' => 'Logo deleted successfully'], 200);
+    }
+    
 }

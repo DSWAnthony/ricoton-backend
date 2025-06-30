@@ -4,6 +4,20 @@ namespace App\Http\Requests\Setting;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @OA\Schema(
+ *     schema="StoreSettingRequest",
+ *     required={"company_name", "company_description"},
+ *     @OA\Property(property="company_name", type="string", maxLength=255, example="Mi Empresa S.A."),
+ *     @OA\Property(property="company_description", type="string", maxLength=255, example="Descripción de la empresa"),
+ *     @OA\Property(
+ *         property="image",
+ *         type="string",
+ *         format="binary",
+ *         description="Imagen de logo (formatos: jpeg,png,jpg,gif,svg, tamaño máximo: 2MB)"
+ *     )
+ * )
+ */
 class StoreSettingRequest extends FormRequest
 {
     /**

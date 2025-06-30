@@ -10,7 +10,7 @@ class CategoryService
 {
     public function getActiveCategories(): Collection
     {
-        return Category::where('is_active', true)->get();
+        return Category::where('is_active', true)->with('products')->get();
     }
 
     public function findCategoryById($id): ?Category

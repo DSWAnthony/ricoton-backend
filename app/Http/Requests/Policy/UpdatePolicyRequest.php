@@ -4,6 +4,14 @@ namespace App\Http\Requests\Policy;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @OA\Schema(
+ *     schema="UpdatePolicyRequest",
+ *     @OA\Property(property="title", type="string", maxLength=255, example="Política de Privacidad Actualizada"),
+ *     @OA\Property(property="description", type="string", example="Detalles actualizados de nuestra política..."),
+ *     @OA\Property(property="other_description", type="string", nullable=true, example="Información adicional actualizada")
+ * )
+ */
 class UpdatePolicyRequest extends FormRequest
 {
     /**

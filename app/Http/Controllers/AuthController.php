@@ -8,6 +8,12 @@ use App\Services\AuthService;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
+/**
+ * @OA\Tag(
+ *     name="Autenticación",
+ *     description="autenticación de usuarios"
+ * )
+ */
 class AuthController extends Controller
 {
 
@@ -16,7 +22,31 @@ class AuthController extends Controller
     ) {}
     
     /**
-     * Display a listing of the resource.
+     * Register
+     *
+     * @OA\Post(
+     *     path="/api/register",
+     *     tags={"Autenticación"},
+     *     summary="Registro de usuario",   
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/RegisterRequest")
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Usuario creado",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Usuario registrado correctamente"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error interno",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Error al crear Usuario")
+     *         )
+     *     )
+     * )
      */
     public function register(RegisterRequest $request)
     {
@@ -30,7 +60,31 @@ class AuthController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Login
+     *
+     * @OA\Post(
+     *     path="/api/login",
+     *     tags={"Autenticación"},
+     *     summary="Login de usuario",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/LoginRequest")
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Credenciales correctas",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Usuario Autenticado correctamente"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Error interno",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Error al autenticar usuario")
+     *         )
+     *     )
+     * )
      */
     public function login(LoginRequest $request)
     {
@@ -41,6 +95,7 @@ class AuthController extends Controller
         }
         
         return response()->json([
+            'user' => auth()->user(),
             'token' => $token
         ]);
     }
@@ -48,40 +103,11 @@ class AuthController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function me()
     {
-        //
+        return response()->json([
+            'user' => auth()->user()
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
 }
