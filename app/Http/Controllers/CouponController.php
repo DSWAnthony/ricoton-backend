@@ -16,7 +16,8 @@ class CouponController extends Controller
     // Obtener todos los cupones
     public function index()
     {
-        $coupons = Coupon::select()->get();
+        $coupons = Coupon::select()->with('products')->get();
+
         return response()->json($coupons);
     }
 

@@ -16,6 +16,8 @@ class About extends Model
         'instagram',
         'facebook',
         'tiktok',
+        'video_ref',
+        'banner_url',
     ];
 
 }

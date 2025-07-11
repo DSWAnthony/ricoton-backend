@@ -35,7 +35,7 @@ class AboutController extends Controller
     public function updateTerm(UpdateAboutRequest $request)
     {
 
-        $term = $this->termService->updateAbout($request->validated());
+        $term = $this->termService->updateAbout($request->validated(), $request->file('banner'));
 
         if ($term) {
             return response()->json($term);

@@ -28,6 +28,7 @@ class UpdateAboutRequest extends FormRequest
             'instagram' => 'nullable|string|max:800',
             'facebook' => 'nullable|string|max:800',
             'tiktok' => 'nullable|string|max:800',
+            'banner' => 'nullable|file|mimes:jpg,jpeg,png,webp',
             'video_ref' => 'nullable|string|max:900',
         ];
     }
